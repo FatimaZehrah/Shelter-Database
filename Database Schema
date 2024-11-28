@@ -1,0 +1,432 @@
+create schema animaladoption1;
+use animaladoption1;
+
+CREATE TABLE Animal (
+    AnimalID VARCHAR(100) PRIMARY KEY,              	
+    AnimalName VARCHAR(100) NOT NULL,               	
+    AnimalAge INT NOT NULL,                         	
+    Breed VARCHAR(100) NOT NULL,              	
+    VaccinationStatus ENUM('Not Vaccinated', 'Vaccinated') NOT NULL,
+    AnimalType VARCHAR(50) NOT NULL,
+    AnimalGender VARCHAR(50) NOT NULL,
+    IntakeDate DATE NOT NULL,                 	
+    AdoptionStatus ENUM('Adopted', 'Available') NOT NULL,
+    SpayStatus ENUM('Spay', 'Unspayed') NOT NULL,
+    SchID VARCHAR(100),
+    PersonID VARCHAR(100),   
+    ShID VARCHAR(100),      
+    FOREIGN KEY (SchID) REFERENCES Schedule_1(SchID),
+    FOREIGN KEY (PersonID) REFERENCES Customer(PersonID),
+    FOREIGN KEY (ShID) REFERENCES Shelter_1(ShID)
+);
+
+
+ CREATE TABLE Assessment (
+    AssessmentID VARCHAR(100) PRIMARY KEY,
+    AssessmentResult VARCHAR(100) NOT NULL,
+    AssessmentType ENUM('Behavioral Assessment', 'Medical Assessment') NOT NULL,
+    AnimalID VARCHAR(100) NOT NULL,
+    FOREIGN KEY (AnimalID) REFERENCES Animal(AnimalID)
+);
+
+
+
+ 
+CREATE TABLE BehaviouralAssessment (
+    AssessmentID VARCHAR(100) PRIMARY KEY,
+    FOREIGN KEY (AssessmentID) REFERENCES Assessment(AssessmentID)
+);
+ALTER TABLE BehaviouralAssessment
+ADD COLUMN FollowUpRequired ENUM('Yes', 'No') DEFAULT 'No';
+ 
+
+     CREATE TABLE MedicalAssessment (
+    AssessmentID VARCHAR(100) PRIMARY KEY,
+    FOREIGN KEY (AssessmentID) REFERENCES Assessment(AssessmentID)
+);
+ALTER TABLE MedicalAssessment
+ADD COLUMN FollowUpRequired ENUM('Yes', 'No') DEFAULT 'No';
+
+
+ 
+
+      CREATE TABLE AdoptionRequest (
+    RequestID VARCHAR(100) PRIMARY KEY,
+    AnimalID VARCHAR(100) NOT NULL,
+    FOREIGN KEY (AnimalID) REFERENCES Animal(AnimalID)
+);
+
+drop table adoptionrequest
+drop table isfor
+drop table ismadeby1
+ALTER TABLE AdoptionRequest
+ADD COLUMN AdoptionRequestStatus ENUM('Pending', 'Completed') NOT NULL;
+
+ALTER TABLE AdoptionRequest
+DROP COLUMN AdoptionRequestStatus;
+
+ALTER TABLE AdoptionRequest
+ADD COLUMN AdoptionRequestStatus ENUM('Pending', 'Completed') NOT NULL;
+
+ 
+
+        CREATE TABLE Customer (
+    PersonID VARCHAR(100) PRIMARY KEY,
+    PDOB DATE NOT NULL,
+    PGender VARCHAR(50) NOT NULL,
+    PAddress VARCHAR(255) NOT NULL,
+    PName VARCHAR(100) NOT NULL,
+    PContactInfo VARCHAR(100) NOT NULL
+);
+
+ 
+
+CREATE TABLE Adopter (
+    PersonID VARCHAR(100) PRIMARY KEY,
+    FOREIGN KEY (PersonID) REFERENCES Customer(PersonID)
+);
+
+ALTER TABLE Adopter
+ADD COLUMN AdoptionMethod VARCHAR(50);
+ 
+
+
+
+
+CREATE TABLE Donator (
+    PersonID VARCHAR(100) PRIMARY KEY,
+    FOREIGN KEY (PersonID) REFERENCES Customer(PersonID)
+);
+
+ALTER TABLE Donator
+ADD COLUMN DonationMode VARCHAR(50);
+ 
+
+CREATE TABLE SupplyProduct (
+    ProductID VARCHAR(100) PRIMARY KEY,
+    SupName VARCHAR(100) NOT NULL,
+    SupType VARCHAR(50) NOT NULL
+);
+ 
+
+CREATE TABLE Schedule (
+    SchID VARCHAR(100) PRIMARY KEY,
+    Activity VARCHAR(100) NOT NULL,
+    SchDate DATE NOT NULL,
+    SchTime TIME NOT NULL
+);
+ 
+
+CREATE TABLE Supplier (
+    SID VARCHAR(100) PRIMARY KEY,
+    SName VARCHAR(100) NOT NULL,
+    SContact VARCHAR(50) NOT NULL,
+    SAddress VARCHAR(255) NOT NULL
+);
+
+ 
+ 
+CREATE TABLE Shelter (
+    ShID VARCHAR(100) PRIMARY KEY,
+    ShName VARCHAR(100) NOT NULL,
+    ShLocation VARCHAR(255) NOT NULL
+);
+ 
+ 
+CREATE TABLE FinancialRecord (
+    FinancialRecordID VARCHAR(100) PRIMARY KEY,
+    MonthlyExpense DECIMAL(10, 2) NOT NULL,
+    DonationAmount DECIMAL(10, 2) NOT NULL,
+    BalanceAmount DECIMAL(10, 2) NOT NULL,
+    RecordDate DATE NOT NULL,
+    ShID VARCHAR(100),
+    FOREIGN KEY (ShID) REFERENCES Shelter_1(ShID)
+);
+ 
+
+
+CREATE TABLE Donation (
+    TransactionID VARCHAR(100) PRIMARY KEY,
+    DonationAmount DECIMAL(10, 2) NOT NULL,
+    DonationDate DATE NOT NULL,
+    ShID VARCHAR(100),
+    FinancialRecordID VARCHAR(100),
+    FOREIGN KEY (ShID) REFERENCES Shelter_1(ShID),
+    FOREIGN KEY (FinancialRecordID) REFERENCES FinancialRecord(FinancialRecordID)
+);
+ 
+
+CREATE TABLE Volunteer (
+    StaffID VARCHAR(100) PRIMARY KEY,
+    Role VARCHAR(50) NOT NULL,
+    VName VARCHAR(100) NOT NULL,
+    VContactInfo VARCHAR(100) NOT NULL,
+    WorkingHours INT NOT NULL
+);
+ 
+
+CREATE TABLE Uses (
+    AnimalID VARCHAR(100),
+    ProductID VARCHAR(100),
+    PRIMARY KEY (AnimalID, ProductID),
+    FOREIGN KEY (AnimalID) REFERENCES Animal(AnimalID),
+    FOREIGN KEY (ProductID) REFERENCES SupplyProduct(ProductID)
+);
+ 
+
+CREATE TABLE IsScaredBy (
+    AnimalID VARCHAR(100),
+    StaffID VARCHAR(100),
+    PRIMARY KEY (AnimalID, StaffID),
+    FOREIGN KEY (AnimalID) REFERENCES Animal(AnimalID),
+    FOREIGN KEY (StaffID) REFERENCES Volunteer(StaffID)
+);
+ 
+
+CREATE TABLE IsMadeBy1 (
+    RequestID VARCHAR(100),
+    PersonID VARCHAR(100),
+    PRIMARY KEY (RequestID, PersonID),
+    FOREIGN KEY (RequestID) REFERENCES AdoptionRequest(RequestID),
+    FOREIGN KEY (PersonID) REFERENCES Customer(PersonID)
+);
+ 
+
+
+CREATE TABLE IsConductedBy (
+    AssessmentID VARCHAR(100),
+    StaffID VARCHAR(100),
+    PRIMARY KEY (AssessmentID, StaffID),
+    FOREIGN KEY (AssessmentID) REFERENCES Assessment(AssessmentID),
+    FOREIGN KEY (StaffID) REFERENCES Volunteer(StaffID)
+);
+ 
+
+CREATE TABLE IsFor (
+    AnimalID VARCHAR(100),
+    RequestID VARCHAR(100),
+    PRIMARY KEY (AnimalID, RequestID),
+    FOREIGN KEY (AnimalID) REFERENCES Animal(AnimalID),
+    FOREIGN KEY (RequestID) REFERENCES AdoptionRequest(RequestID)
+);
+ 
+
+CREATE TABLE IsMadeBy2 (
+    PersonID VARCHAR(100),
+    TransactionID VARCHAR(100),
+    PRIMARY KEY (PersonID, TransactionID),
+    FOREIGN KEY (PersonID) REFERENCES Customer(PersonID),
+    FOREIGN KEY (TransactionID) REFERENCES Donation(TransactionID)
+);
+
+ 
+
+CREATE TABLE Provides (
+    ProductID VARCHAR(100),
+    SID VARCHAR(100),
+    PRIMARY KEY (ProductID, SID),
+    FOREIGN KEY (ProductID) REFERENCES SupplyProduct(ProductID),
+    FOREIGN KEY (SID) REFERENCES Supplier(SID)
+);
+ 
+
+CREATE TABLE IsMaintainedBy (
+    StaffID VARCHAR(100),
+    SchID VARCHAR(100),
+    PRIMARY KEY (StaffID, SchID),
+    FOREIGN KEY (StaffID) REFERENCES Volunteer(StaffID),
+    FOREIGN KEY (SchID) REFERENCES Schedule(SchID)
+);
+ALTER table AdoptionRequest
+ADD AdoptionRequestStatus VARCHAR(100) NOT NULL;
+
+ALTER TABLE Volunteer
+MODIFY COLUMN WorkingHours VARCHAR(100) NOT NULL;
+SELECT * FROM ANIMAL;
+SELECT * FROM CUSTOMER;
+SELECT * FROM FINANCIALRECORD;
+SELECT * FROM DONATION;
+
+SELECT * FROM ASSESSMENT;
+SELECT * FROM DONATION;
+SELECT * FROM AdoptionRequest;
+
+SELECT * FROM Animal
+WHERE AdoptionStatus = 'Available';
+
+SELECT Breed, AVG(AnimalAge) AS AvgAge
+FROM Animal
+GROUP BY Breed;
+
+SELECT Breed, COUNT(*) AS NumAnimals
+FROM Animal
+GROUP BY Breed
+HAVING COUNT(*) > 10;
+
+SELECT * FROM Animal
+ORDER BY AnimalAge DESC;
+
+
+SELECT a.AnimalName, ass.AssessmentType, ass.AssessmentResult
+FROM Animal a
+JOIN Assessment ass ON a.AnimalID = ass.AnimalID;
+
+
+SELECT AnimalType, AVG(AnimalAge) AS AvgAge
+FROM Animal
+GROUP BY AnimalType
+HAVING AVG(AnimalAge) > (
+    SELECT AVG(AnimalAge)
+    FROM Animal
+);
+
+SELECT *
+FROM Animal a
+WHERE a.AnimalAge > (
+    SELECT AVG(b.AnimalAge)
+    FROM Animal b
+    WHERE b.Breed = a.Breed
+);
+
+SELECT *
+FROM Animal a
+WHERE a.AnimalAge > ALL (
+    SELECT b.AnimalAge
+    FROM Animal b
+    WHERE b.Breed = 'YourBreed'
+);
+
+
+SELECT AnimalName
+FROM Animal
+WHERE AnimalAge < ANY (
+    SELECT AnimalAge
+    FROM Animal
+    WHERE AnimalType = 'Cat'
+);
+
+SELECT AnimalName
+FROM Animal a
+WHERE EXISTS (
+  SELECT 1
+  FROM AdoptionRequest ar
+  WHERE ar.AnimalID = a.AnimalID AND ar.AdoptionRequestStatus = 'Completed'
+);
+
+SELECT AnimalID, (
+    SELECT MAX(AdoptionDate)
+    FROM AdoptionRequest ar
+    WHERE ar.AnimalID = a.AnimalID
+) AS LatestAdoptionDate
+FROM Animal a;
+
+SELECT AnimalName, (
+  SELECT COUNT(*)
+  FROM Assessment
+  WHERE Assessment.AnimalID = Animal.AnimalID
+) AS NumAssessments
+FROM Animal;
+
+SELECT AnimalType, AVG(AnimalAge) AS AvgAge
+FROM Animal
+GROUP BY AnimalType
+HAVING AVG(AnimalAge) > (
+    SELECT AVG(AnimalAge)
+    FROM Animal
+);
+
+DROP TABLE volunteer;
+DROP TABLE ISSCAREDBY;
+DROP TABLE ISCONDUCTEDBY;
+DROP TABLE ISMAINTAINEDBY;
+drop table Assessment;
+
+CREATE TABLE Volunteer (
+    StaffID VARCHAR(100) PRIMARY KEY,
+    Role VARCHAR(50) NOT NULL,
+    VName VARCHAR(100) NOT NULL,
+    VContactInfo VARCHAR(100) NOT NULL,
+    WorkingHours VARCHAR(100) NOT NULL
+);
+
+
+
+select * from animal
+select count(*) from donation
+select * from adopter
+
+SELECT AnimalID, (
+    SELECT MAX(AdoptionDate)
+    FROM AdoptionRequest ar
+    WHERE ar.AnimalID = a.AnimalID
+) AS LatestAdoptionDate
+FROM Animal a;
+
+SELECT AnimalName, (
+  SELECT COUNT(*)
+  FROM Assessment
+  WHERE Assessment.AnimalID = Animal.AnimalID
+) AS NumAssessments
+FROM Animal;
+
+SELECT AnimalType, AVG(AnimalAge) AS AvgAge
+FROM Animal
+GROUP BY AnimalType
+HAVING AVG(AnimalAge) > (
+    SELECT AVG(AnimalAge)
+    FROM Animal
+);
+
+SELECT * FROM Animal
+WHERE AdoptionStatus = 'Available';
+
+SELECT Breed, AVG(AnimalAge) AS AvgAge
+FROM Animal
+GROUP BY Breed;
+
+SELECT Breed, COUNT(*) AS NumAnimals
+FROM Animal
+GROUP BY Breed
+HAVING COUNT(*) > 10;
+
+SELECT * FROM Animal
+ORDER BY AnimalAge DESC;
+
+
+SELECT a.AnimalName, ass.AssessmentType, ass.AssessmentResult
+FROM Animal a
+JOIN Assessment ass ON a.AnimalID = ass.AnimalID;
+
+
+SELECT AnimalType, AVG(AnimalAge) AS AvgAge
+FROM Animal
+GROUP BY AnimalType
+HAVING AVG(AnimalAge) > (
+    SELECT AVG(AnimalAge)
+    FROM Animal
+);
+
+SELECT *
+FROM Animal a
+WHERE a.AnimalAge > (
+    SELECT AVG(b.AnimalAge)
+    FROM Animal b
+    WHERE b.Breed = a.Breed
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
