@@ -19,11 +19,13 @@ The schema consists of several related tables that store detailed information ab
 Additionally, visualizations have been integrated to allow insights into key data points like animal adoption trends, donation distributions, and shelter expenses. These visualizations help administrators and stakeholders to make informed decisions about the shelter's operations.
 
 ****Requirements****
+
 Python (3.x version)
 
 MySQL Database: Set up a MySQL server and create the database using the provided schema.
 
 **Required Libraries:**
+
 mysql-connector-python
 
 pandas
