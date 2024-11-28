@@ -20,10 +20,14 @@ Additionally, visualizations have been integrated to allow insights into key dat
 
 ****Requirements****
 Python (3.x version)
+
 MySQL Database: Set up a MySQL server and create the database using the provided schema.
 
 **Required Libraries:**
 mysql-connector-python
+
 pandas
+
 matplotlib
+
 seaborn (for heatmaps and pair plots)
