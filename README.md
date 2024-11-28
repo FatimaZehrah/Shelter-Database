@@ -7,9 +7,13 @@ The schema consists of several related tables that store detailed information ab
 ****Key Features:****
 
 **Animal Management:** Manage animal details such as ID, name, age, breed, vaccination status, and adoption status.
+
 **Customer Interaction:** Track customer interactions, including adoption requests and donations.
+
 **Financial Records:** Record shelter expenses and donations, ensuring the shelter's financial health is monitored.
+
 **Volunteer Contributions:** Track volunteer hours and roles, helping to optimize shelter operations.
+
 **Assessment Records:** Record both medical and behavioral assessments for animals.
 
 Additionally, visualizations have been integrated to allow insights into key data points like animal adoption trends, donation distributions, and shelter expenses. These visualizations help administrators and stakeholders to make informed decisions about the shelter's operations.
